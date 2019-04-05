@@ -14,7 +14,8 @@ call plug#begin()
 " Plugins
 Plug 'SirVer/ultisnips'
 Plug 'altercation/vim-colors-solarized'
-Plug 'benekastah/neomake'
+" Plug 'benekastah/neomake'
+Plug 'w0rp/ale'
 Plug 'benmills/vimux'
 Plug 'honza/vim-snippets'
 Plug 'kien/rainbow_parentheses.vim'
@@ -31,6 +32,7 @@ Plug 'tpope/vim-surround'
 Plug 'zanglg/nova.vim'
 Plug 'chrisbra/csv.vim'
 Plug 'jgdavey/tslime.vim'
+Plug 'heavenshell/vim-pydocstring'
 
 " Syntax highlighters
 Plug 'chase/vim-ansible-yaml'
@@ -234,6 +236,9 @@ set t_Co=256
 
 " Remove some of the more annoying 'Press ENTER to continue' messages
 set shortmess=atI
+
+" Set softtabstop per pydocstring pluggin README
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 
 " Automatically reload vimrc when save
 autocmd! BufWritePost .vimrc source %

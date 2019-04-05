@@ -15,12 +15,9 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# share bash history from TMUX sessions
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMANDS'\n'}history -a; history -c; history -r"
-
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=
-HISTFILESIZE=
+HISTSIZE=-1
+HISTFILESIZE=-1
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -144,26 +141,10 @@ subprocess.run(["subl", file])\
 
 export EDITOR=vim
 
+alias rm=trash
+
+# Sourcing virtualenvwrapper.sh per instructions from https://realpython.com/python-virtual-environments-a-primer/
+# I don't know if this is correct. Just doing on my own and guessing a bit.
+source /home/cameronhr/default/bin/virtualenvwrapper.sh
+# added by Anaconda3 installer
 export PATH="/home/cameronhr/anaconda3/bin:$PATH"
-
-SSH_ENV="$HOME/.ssh/environment"
-
-# start the ssh-agent
-function start_agent {
-    echo "Initializing new SSH agent..."
-    # spawn ssh-agent
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-    echo succeeded
-    chmod 600 "${SSH_ENV}"
-    . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add
-}
-
-if [ -f "${SSH_ENV}" ]; then
-     . "${SSH_ENV}" > /dev/null
-     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-        start_agent;
-    }
-else
-    start_agent;
-fi
