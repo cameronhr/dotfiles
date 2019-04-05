@@ -78,7 +78,7 @@ autocmd BufRead,BufNewFile *.jar,*.war,*.ear,*.sar,*.rar,*.epub set filetype=zip
 autocmd BufRead,BufNewFile .babelrc,.eslintrc set filetype=json
 
 " Run neomake after writing any buffer
-autocmd BufWritePost * Neomake
+" autocmd BufWritePost * Neomake
 
 " Visual bell and no beep
 set vb
