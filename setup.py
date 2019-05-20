@@ -10,6 +10,7 @@ symlink_mapping = (
     ('vim', '~/.vim'),
     ('vim/init.vim', '~/.vimrc'),
     ('vim', '~/.config/nvim'),
+    ('bash_custom', '~/.bash_custom'),
 )
 
 def install_symlinks(force=False):
