@@ -16,7 +16,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # share bash history from TMUX sessions
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMANDS'\n'}history -a; history -c; history -r"
+# export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMANDS'\n'}history -a; history -c; history -r"
+export PROMPT_COMMAND="history -a; history -n"
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=
