@@ -2,24 +2,37 @@ A collection of my dotfiles, as well as other customization steps to be taken wh
 
 ## Installation
 
-Assume all repos are to be located in `~/workspace`.
+The following assumes all repos are to be located in `~/workspace`.
 
-```bash
-mkdir -p ~/bin
-curl -sL https://github.com/djl/vcprompt/raw/master/bin/vcprompt > ~/bin/vcprompt
-chmod 755 ~/bin/vcprompt
-mkdir -p  ~/workspace && cd ~/workspace
-git clone git@github.com:cameronhr/dotfiles.git
-python dotfiles/setup.py
+Copy / paste the following script into a terminal to install initial packages, clone this repo, and execute `setup.py`.
+
 ```
-On first use of vim: `:PlugInstall`
+# Continue on failure
+set +e
+# Install dependencies and my essential packages
+sudo apt install -y curl &&\
+sudo apt install -y git &&\
+sudo apt install -y python &&\
+sudo apt install -y python3-pip &&\
+sudo apt install -y tmux &&\
+sudo apt install -y vim &&\
+mkdir -p ~/.virtualenvs &&\
+mkdir -p ~/bin &&\
+curl -sL https://github.com/djl/vcprompt/raw/master/bin/vcprompt > ~/bin/vcprompt &&\
+chmod 755 ~/bin/vcprompt &&\
+mkdir -p  ~/workspace && cd ~/workspace &&\
+git clone git@github.com:cameronhr/dotfiles.git || echo &&\
+python dotfiles/setup.py &&\
+source ~/.bash_custom &&\
+vim tmp_pluginstall -c "PlugInstall|qa!"
+```
 
 
 ## Other
 
 1. Correct vim solarized colour display in Terminal:
-    Open a Terminal window and modify the Profile (Terminal -> Preferences -> Profiles in Ubuntu 18.04)
-    Select 'Solarized Dark' for both 'Text and Background Color' and 'Palette'
+    Open a Terminal window and modify the Profile (Edit -> Preferences -> Profiles in Ubuntu 18.04)
+    Select 'Solarized Dark' for both 'Built-in schemes' and 'Palette'
 2. Bind `Control_L` to `Caps_Lock`:
     Install _Tweaks_ tool: `sudo apt-get install -yq gnome-tweak-tool && gnome-tweaks`
     Click through: 'Keyboard & Mouse -> Additional Layout Options -> Caps Lock behavior'
