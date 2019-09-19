@@ -9,19 +9,19 @@
     lg = log --color --pretty=format:'%C(auto)%h %Cred %<(10,trunc)%an %Creset%C(auto)%s %Cgreen(%cr,%ar) %Creset%C(auto)%d'
 
 [user]
-	name = cameronhr
-	email = camhard@gmail.com
+    name = cameronhr
+    email = camhard@gmail.com
 
 [push]
-	default = simple
+    default = simple
 
 [fetch]
-	prune = true
+    prune = true
 
 [core]
-	excludesfile = /Users/cameronhr/.gitignore_global
+    excludesfile = /home/cameronhr/.gitignore_global
 [filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
