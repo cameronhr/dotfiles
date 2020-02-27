@@ -16,7 +16,9 @@ sudo apt install -y python &&\
 sudo apt install -y python3-pip &&\
 sudo apt install -y tmux &&\
 sudo apt install -y vim &&\
-mkdir -p ~/.virtualenvs &&\
+pip3 install virtualenv &&\
+virtualenv -p python3 ~/.virtualenvs/default &&\
+source ~/.virtualenvs/default/bin/activate &&\
 mkdir -p ~/bin &&\
 curl -sL https://github.com/djl/vcprompt/raw/master/bin/vcprompt > ~/bin/vcprompt &&\
 chmod 755 ~/bin/vcprompt &&\
