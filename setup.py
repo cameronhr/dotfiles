@@ -6,6 +6,7 @@ import os
 
 symlink_mapping = (
     ('gitconfig', '~/.gitconfig'),
+    ('gitattributes_global', '~/.gitattributes_global'),
     ('gitignore_global', '~/.gitignore_global'),
     ('tmux.conf', '~/.tmux.conf'),
     ('vim', '~/.vim'),

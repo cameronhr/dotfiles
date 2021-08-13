@@ -237,8 +237,10 @@ set t_Co=256
 " Remove some of the more annoying 'Press ENTER to continue' messages
 set shortmess=atI
 
-" Set softtabstop per pydocstring pluggin README
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
+" Set softtabstop and line length guides.
+autocmd FileType python setlocal
+    \ tabstop=4 shiftwidth=4 softtabstop=4 expandtab
+    \ colorcolumn=73,80
 
 " Automatically reload vimrc when save
 autocmd! BufWritePost .vimrc source %
