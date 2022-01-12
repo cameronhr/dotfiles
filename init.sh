@@ -82,7 +82,7 @@ install_packages() {
             vim
         brew install --cask -f \
             rectangle \
-        docker
+            docker
 
         # Note: Homebrew has different prefixes for Apple Silicon and Intel-based macs
         # brew_bash="/usr/local/bin/bash"
