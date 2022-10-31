@@ -19,7 +19,7 @@
     prune = true
 
 [core]
-    excludesfile = /home/cameronhr/.gitignore_global
+	excludesfile = /Users/cameronhr/.gitignore_global
     attributesfile = ~/home/cameronhr/.gitattributes_global
     editor = vim
 

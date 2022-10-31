@@ -19,6 +19,7 @@ Plug 'rking/ag.vim'
 Plug 'schickling/vim-bufonly'
 Plug 'scrooloose/nerdtree'
 Plug 'sickill/vim-monokai'
+Plug 'thesis/vim-solidity', {'branch': 'main' }
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
