@@ -57,7 +57,7 @@ setup_virtualenv() {
     fi
     python3 -m venv ${default_venv}
     source ${default_venv}/bin/activate
-    python3 -m pip install -U pip ipython click
+    python3 -m pip install -U pip ipython click black isort flake8 bandit
     export VIRTUAL_ENV_DISABLE_PROMPT=1
     source ${default_venv}/bin/activate
 }
@@ -120,7 +120,7 @@ init() {
 
     # Get my public keys on the machine
     mkdir -p "${HOME}/.ssh"
-    curl -L https://github.com/cameronhr.keys >> "${HOME}/.ssh/authorized_keys"	
+    curl -L https://github.com/cameronhr.keys >> "${HOME}/.ssh/authorized_keys"
 
     setup_virtualenv
     setup_dotfiles
