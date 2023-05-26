@@ -36,7 +36,6 @@ setup_dotfiles() {
     symlink "${DOTFILES}/docker_config.json" ~/.docker/config.json
     symlink "${DOTFILES}/gitconfig" ~/.gitconfig
     symlink "${DOTFILES}/gitignore_global" ~/.gitignore_global
-    symlink "${DOTFILES}/pylintrc" ~/.pylintrc
     symlink "${DOTFILES}/tmux.conf" ~/.tmux.conf
     symlink "${DOTFILES}/vim" ~/.vim
     symlink "${DOTFILES}/xmodmap" ~/.xmodmap
@@ -91,9 +90,6 @@ install_packages() {
         grep ${brew_bash} /etc/shells &>/dev/null || echo ${brew_bash} | sudo tee -a /etc/shells
         [[ ${SHELL} = ${brew_bash} ]] || chsh -s ${brew_bash} $(whoami | xargs echo -n)
 
-        # Add ssh agent to system keychain on first unlock
-        ssh_agent_config="AddKeysToAgent yes"
-        grep "${ssh_agent_config}" ~/.ssh/config &>/dev/null || echo "${ssh_agent_config}" >> ~/.ssh/config
     else
         # Currently only working for Debian and Ubuntu based distros
         if grep -qE "Ubuntu|Debian|Raspbian" /etc/issue; then
@@ -121,6 +117,10 @@ init() {
     # Get my public keys on the machine
     mkdir -p "${HOME}/.ssh"
     curl -L https://github.com/cameronhr.keys >> "${HOME}/.ssh/authorized_keys"
+
+    # Add ssh agent to system keychain on first unlock
+    ssh_agent_config="AddKeysToAgent yes"
+    grep "${ssh_agent_config}" ~/.ssh/config &>/dev/null || echo "${ssh_agent_config}" >> ~/.ssh/config
 
     setup_virtualenv
     setup_dotfiles

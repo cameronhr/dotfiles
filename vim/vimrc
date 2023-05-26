@@ -89,6 +89,8 @@ autocmd BufRead,BufNewFile .babelrc,.eslintrc set filetype=json
 
 " Run black on python files before writing
 " autocmd BufWritePre *.py silent! execute ':Black'
+" Display visual guide for PEP8 line lengths
+autocmd FileType python setlocal colorcolumn=73,80
 
 " Start at the beginning of the buffer for git commit messages
 au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
@@ -344,6 +346,9 @@ cnoreabbrev Set set
 
 " json-vim
 let g:vim_json_syntax_conceal = 0
+
+" set hybrid line numbering
+set nu rnu
 
 " vim-markdown
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'javascript']
