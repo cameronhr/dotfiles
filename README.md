@@ -4,9 +4,9 @@ A collection of my dotfiles, as well as other customization steps to be taken wh
 
 You can pipe the install script directly to bash with the following (if you aren't me, you probably want to be careful doing this and understand what this script does before running it on your machine).
 
-`curl -fL https://raw.githubusercontent.com/cameronhr/dotfiles/master/init.sh | bash`
+`curl -fL https://raw.githubusercontent.com/cameronhr/dotfiles/main/init.sh | bash`
 
-Run it from the directory that you want the dotfiles repo cloned into.  
+Run it from the directory that you want the dotfiles repo cloned into.
 
 ## Other
 
@@ -21,5 +21,5 @@ Ubuntu:
 
 OS X:
 
-1. Remap caps lock to ctrl: System Preferences -> Keyboard -> Modifier Keys...
+1. Remap caps lock to ctrl: System Preferences -> Keyboard -> Modifier Keys
 2. Turn off the dumb Force Click / haptic feedback garbage in the trackpad: System Preferences -> Trackpad

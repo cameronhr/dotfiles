@@ -19,6 +19,7 @@ Plug 'rking/ag.vim'
 Plug 'schickling/vim-bufonly'
 Plug 'scrooloose/nerdtree'
 Plug 'sickill/vim-monokai'
+Plug 'thesis/vim-solidity', {'branch': 'main' }
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -48,18 +49,20 @@ set smartindent
 
 let g:airline#extensions#ale#enabled = 1
 
-" set Vim-specific sequences for RGB colors
-" set termguicolors
-" let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-" let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" Linters and fixers
+let g:ale_linters = {'python': ['flake8', 'bandit']}
+let g:ale_fixers = {
+\    '*': ['remove_trailing_lines', 'trim_whitespace'],
+\    'python': ['black', 'isort'],
+\}
+let g:ale_fix_on_save = 1
 
-set background=light
+set background=dark
 silent! colorscheme solarized
 
 " Needed to use limelight with solarized
 let g:limelight_conceal_ctermfg = 245  " Solarized Base1
 let g:limelight_conceal_guifg = '#8a8a8a'  " Solarized Base1
-
 
 " Turn on 3 modelines, these allow us to set filetype etc using the first 3
 set modeline
@@ -86,6 +89,8 @@ autocmd BufRead,BufNewFile .babelrc,.eslintrc set filetype=json
 
 " Run black on python files before writing
 " autocmd BufWritePre *.py silent! execute ':Black'
+" Display visual guide for PEP8 line lengths
+autocmd FileType python setlocal colorcolumn=73,80
 
 " Start at the beginning of the buffer for git commit messages
 au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
@@ -157,7 +162,7 @@ set sw=4 sts=4 ts=4 expandtab
 vnoremap // y/<C-R>"<CR>
 
 " See lines numbers, ruler, and current line
-set number
+set number relativenumber
 set ruler
 set cursorline
 
@@ -342,5 +347,17 @@ cnoreabbrev Set set
 " json-vim
 let g:vim_json_syntax_conceal = 0
 
+" set hybrid line numbering
+set nu rnu
+
 " vim-markdown
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'javascript']
+
+" Auto-enclose
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O

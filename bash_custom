@@ -9,20 +9,18 @@ GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 
 get_ps1() {
-    local blue="\[\033[01;34m\]"
-    local white="\[\033[01;00m\]"
-    local magenta="\[\033[01;35m\]"
-    local pink="\[\033[01;31m\]"
-    local green="\[\033[01;32m\]"
+    local blue="\[\033[0;34m\]"
+    local white="\[\033[0;00m\]"
+    local magenta="\[\033[0;35m\]"
+    local pink="\[\033[0;31m\]"
+    local green="\[\033[0;32m\]"
 
-    local hostname_number=$(hostname | od | tr ' ' '\n' | awk '{total = total + $1}END{print 30 + (total % 6)}')
-    local hostname_color="\[\033[01;${hostname_number}m\]"
     local user="${blue}\u${white}"
-    local host="${hostname_color}\h${white}"
+    local host="${hostname}\h${white}"
     local dir="${green}\w${white}"
     local time="${green}\$(date \"+%H:%M:%S\")${white}"
 
-    local git="${green}\$(__git_ps1 '%s')${white}"
+    local git="${white}\$(__git_ps1 '%s')${white}"
 
     echo "${user}@${host} ${dir} ${git}\n${time} $ "
 }
@@ -65,3 +63,9 @@ if [[ -z ${VIRTUAL_ENV} ]] && [[ -d ${default_venv} ]]; then
 elif [ -n "$VIRTUAL_ENV" ]; then
   . "$VIRTUAL_ENV/bin/activate"
 fi
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/cameron/google-cloud-sdk/path.bash.inc' ]; then . '/Users/cameron/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/cameron/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/cameron/google-cloud-sdk/completion.bash.inc'; fi
