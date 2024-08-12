@@ -30,7 +30,7 @@ Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 Plug 'zanglg/nova.vim'
 
 " Syntax highlighters
@@ -60,7 +60,7 @@ let g:ale_fix_on_save = 1
 let g:ale_python_flake8_options = '--max-line-length=88 --extend-ignore=E501 --extend-select=B950 --extend-ignore=E203'
 let g:ale_python_isort_options = '--profile black'
 
-set background=dark
+set background=light
 silent! colorscheme solarized
 
 " Needed to use limelight with solarized
