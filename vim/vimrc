@@ -21,6 +21,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'sickill/vim-monokai'
 Plug 'thesis/vim-solidity', {'branch': 'main' }
 Plug 'tommcdo/vim-exchange'
+Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-markdown'
@@ -56,6 +57,8 @@ let g:ale_fixers = {
 \    'python': ['black', 'isort'],
 \}
 let g:ale_fix_on_save = 1
+let g:ale_python_flake8_options = '--max-line-length=88 --extend-ignore=E501 --extend-select=B950 --extend-ignore=E203'
+let g:ale_python_isort_options = '--profile black'
 
 set background=dark
 silent! colorscheme solarized
