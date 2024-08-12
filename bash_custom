@@ -55,14 +55,9 @@ fi
 export PATH="$HOME/bin:$HOME/go/bin:$PATH"
 
 export PYTHONDONTWRITEBYTECODE=1
-# Activate the default virtualenv if one isn't activated already
-default_venv="${HOME}/.virtualenvs/default"
-if [[ -z ${VIRTUAL_ENV} ]] && [[ -d ${default_venv} ]]; then
-    export VIRTUAL_ENV_DISABLE_PROMPT=1
-    source ${default_venv}/bin/activate
-elif [ -n "$VIRTUAL_ENV" ]; then
-  . "$VIRTUAL_ENV/bin/activate"
-fi
+
+eval "$(${HOME}/.local/bin/mise activate bash)"
+source <(mise completion bash)
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/cameron/google-cloud-sdk/path.bash.inc' ]; then . '/Users/cameron/google-cloud-sdk/path.bash.inc'; fi

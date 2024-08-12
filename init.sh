@@ -5,90 +5,113 @@ set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
+# Define global directory paths
+readonly home_dir="${HOME}"
+readonly workspace_dir="${home_dir}/workspace"
+readonly dotfiles_dir="${workspace_dir}/dotfiles"
+readonly ssh_dir="${home_dir}/.ssh"
+readonly local_bin_dir="${home_dir}/.local/bin"
+readonly config_dir="${home_dir}/.config"
+
 symlink() {
-    local SOURCE="${1}"
-    local TARGET="${2}"
+    local source="${1}"
+    local target="${2}"
 
     # Make sure the parent folder exists before creating the symlink
-    mkdir -pv "$(dirname ${TARGET})"
+    mkdir -pv "$(dirname "${target}")"
 
-    ln -sf "${SOURCE}" "${TARGET}"
+    ln -sf "${source}" "${target}"
 }
 
-# Set-up the dotfile repo
-setup_dotfiles() {
-    local readonly WORKSPACE="${HOME}/workspace"
-    local readonly DOTFILES="${WORKSPACE}/dotfiles"
-    mkdir -p "${WORKSPACE}"
+install_prerequisites() {
+    echo "Installing prerequisites"
 
-    if [[ -d "${DOTFILES}" ]]; then
+    if [[ $(uname) == "Linux" ]]; then
+        sudo -E apt-get -yqq update > /dev/null
+        sudo -E apt-get -yqq install \
+            curl \
+            git \
+            > /dev/null
+    fi
+    if [[ $(uname) == "Darwin" ]]; then
+        # On MacOS, install and use brew package manager
+        if ! which brew &>/dev/null; then
+            echo 'Installing brew package manager: https://brew.sh/'
+            echo 'Requires user password'
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        fi
+    fi
+}
+
+setup_dotfiles() {
+    mkdir -p "${workspace_dir}"
+
+    if [[ -d "${dotfiles_dir}" ]]; then
         echo "dotfiles already cloned, skipping"
     else
-        git clone git@github.com:cameronhr/dotfiles.git "${DOTFILES}"
-        cd dotfiles
+        git clone git@github.com:cameronhr/dotfiles.git "${dotfiles_dir}"
+        cd "${dotfiles_dir}"
         git checkout updates
     fi
+}
 
-    # Set-up symlinks
-    symlink "${DOTFILES}/bash_custom" ~/.bash_custom
-    symlink "${DOTFILES}/bash_linux" ~/.bash_linux
-    symlink "${DOTFILES}/bash_mac" ~/.bash_mac
-    symlink "${DOTFILES}/docker_config.json" ~/.docker/config.json
-    symlink "${DOTFILES}/gitconfig" ~/.gitconfig
-    symlink "${DOTFILES}/gitignore_global" ~/.gitignore_global
-    symlink "${DOTFILES}/tmux.conf" ~/.tmux.conf
-    symlink "${DOTFILES}/vim" ~/.vim
-    symlink "${DOTFILES}/xmodmap" ~/.xmodmap
+setup_symlinks() {
+    symlink "${dotfiles_dir}/bash_custom" "${home_dir}/.bash_custom"
+    symlink "${dotfiles_dir}/bash_linux" "${home_dir}/.bash_linux"
+    symlink "${dotfiles_dir}/bash_mac" "${home_dir}/.bash_mac"
+    symlink "${dotfiles_dir}/docker_config.json" "${home_dir}/.docker/config.json"
+    symlink "${dotfiles_dir}/gitconfig" "${home_dir}/.gitconfig"
+    symlink "${dotfiles_dir}/gitignore_global" "${home_dir}/.gitignore_global"
+    symlink "${dotfiles_dir}/tmux.conf" "${home_dir}/.tmux.conf"
+    symlink "${dotfiles_dir}/vim" "${home_dir}/.vim"
+    symlink "${dotfiles_dir}/nvim" "${config_dir}/nvim"
+    symlink "${dotfiles_dir}/xmodmap" "${home_dir}/.xmodmap"
+    symlink "${dotfiles_dir}/mise.toml" "${config_dir}/mise/config.toml"
 
-    # Mac-only symlinks
-    if ! grep -Fxq 'source ~/.bash_custom' "${HOME}/.bashrc"; then
-        echo 'source ~/.bash_custom' >> "${HOME}/.bashrc"
+    # Add sourcing of ~/.bash_custom to .bashrc and .profile if not present
+    if ! grep -Fxq 'source ~/.bash_custom' "${home_dir}/.bashrc"; then
+        echo 'source ~/.bash_custom' >> "${home_dir}/.bashrc"
     fi
-    if ! grep -Fxq 'source ~/.bash_custom' "${HOME}/.profile"; then
-        echo 'source ~/.bash_custom' >> "${HOME}/.profile"
+    if ! grep -Fxq 'source ~/.bash_custom' "${home_dir}/.profile"; then
+        echo 'source ~/.bash_custom' >> "${home_dir}/.profile"
     fi
 }
 
-setup_virtualenv() {
-    local default_venv="${HOME}/.virtualenvs/default"
-    if [[ -d ${default_venv} ]]; then
-        echo "default virtualenv exists, skipping" && return 0
-    fi
-    python3 -m venv ${default_venv}
-    source ${default_venv}/bin/activate
-    python3 -m pip install -U pip ipython click black isort flake8 bandit
-    export VIRTUAL_ENV_DISABLE_PROMPT=1
-    source ${default_venv}/bin/activate
-}
-
-install_packages() {
+setup_system() {
     if [[ $(uname) == "Darwin" ]]; then
         if ! which brew &> /dev/null; then
             echo 'Installing `brew` package manager: https://brew.sh/'
             echo 'Requires user password'
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "${HOME}/.profile"
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "${home_dir}/.profile"
             eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
 
+        echo "Installing packages with brew"
         brew install \
             bash \
             bash-completion \
             git \
+            mise \
             mosh \
             python3 \
-            tmux \
-            vim
+            tmux
         brew install --cask -f \
             rectangle \
             docker
 
-        # Note: Homebrew has different prefixes for Apple Silicon and Intel-based macs
-        # brew_bash="/usr/local/bin/bash"
-        brew_bash="/opt/homebrew/bin/bash"
+        if [[ $(uname -m) == "arm64" ]]; then
+            brew_bash="/opt/homebrew/bin/bash"
+        else
+            brew_bash="/usr/local/bin/bash"
+        fi
         echo "Adding ${brew_bash} to /etc/shells if not present"
-        grep ${brew_bash} /etc/shells &>/dev/null || echo ${brew_bash} | sudo tee -a /etc/shells
-        [[ ${SHELL} = ${brew_bash} ]] || chsh -s ${brew_bash} $(whoami | xargs echo -n)
+        grep "${brew_bash}" /etc/shells &>/dev/null || echo "${brew_bash}" | sudo tee -a /etc/shells
+        [[ ${SHELL} = ${brew_bash} ]] || chsh -s "${brew_bash}" "$(whoami | xargs echo -n)"
+
+        # Add ssh agent to system keychain on first unlock
+        ssh_agent_config="AddKeysToAgent yes"
+        grep "${ssh_agent_config}" "${ssh_dir}/config" &>/dev/null || echo "${ssh_agent_config}" >> "${ssh_dir}/config"
 
     else
         # Currently only working for Debian and Ubuntu based distros
@@ -108,27 +131,46 @@ install_packages() {
     fi
 }
 
-init() {
-    install_packages
+setup_mise() {
+    # Install mise from their install script
+    curl --no-progress-meter https://mise.run | sh
 
-    # Set vim as default system editor on Linux
-    [[ $(uname) == "Linux" ]] && sudo update-alternatives --set editor /usr/bin/vim.nox
+    eval "$("${local_bin_dir}/mise" activate bash)"
+    mise trust "${config_dir}/mise/config.toml" || echo "No global mise config, not trusting"
 
-    # Get my public keys on the machine
-    mkdir -p "${HOME}/.ssh"
-    curl -L https://github.com/cameronhr.keys >> "${HOME}/.ssh/authorized_keys"
+    mise plugin add usage
+    mise use -g python@3.12
 
-    # Add ssh agent to system keychain on first unlock
-    ssh_agent_config="AddKeysToAgent yes"
-    grep "${ssh_agent_config}" ~/.ssh/config &>/dev/null || echo "${ssh_agent_config}" >> ~/.ssh/config
+    mise install -y neovim
+    mise use -g neovim
 
-    setup_virtualenv
-    setup_dotfiles
-
-    echo "Installing vim plugins"
-    vim +'PlugInstall --sync' +qall > /dev/null
-
-    echo "setup complete, run 'source ~/.bashrc' to source changes"
+    if [[ -f "${config_dir}/mise/config.toml" ]]; then
+        mise exec python -- python3 -m pip install \
+            ipython \
+            requests
+    fi
 }
 
-init "$@"
+init() {
+    install_prerequisites
+
+    # Get my public keys on the machine
+    mkdir -p "${ssh_dir}"
+    curl -L https://github.com/cameronhr.keys >> "${ssh_dir}/authorized_keys"
+
+    setup_system
+    setup_symlinks
+    setup_dotfiles
+    setup_mise
+
+    echo "Setup complete. Please run 'source ~/.bashrc' to apply changes."
+}
+
+# When piping in from stdin (eg curl), BASH_SOURCE[0] will be unset, and
+# when executing via ./init.sh or bash init.sh, BASH_SOURCE[0] and ${0}
+# will be equal
+if [ "${BASH_SOURCE[0]}" == "${0}" ] || [ -z "${BASH_SOURCE[0]}" ]; then
+  # Tell bash to fail immediately on any error as well as unset variables
+  set -eu -o pipefail
+  init "$@"
+fi
