@@ -95,10 +95,12 @@ setup_system() {
             mise \
             mosh \
             python3 \
+            ripgrep \
+            shellcheck \
             tmux
         brew install --cask -f \
-            rectangle \
-            docker
+            docker \
+            rectangle
 
         if [[ $(uname -m) == "arm64" ]]; then
             brew_bash="/opt/homebrew/bin/bash"
@@ -125,6 +127,8 @@ setup_system() {
                 python3 \
                 python3-pip \
                 python3-venv \
+                ripgrep \
+                shellcheck \
                 tmux \
                 vim-nox
         fi
