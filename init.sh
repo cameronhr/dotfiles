@@ -57,8 +57,6 @@ setup_dotfiles() {
 
 setup_symlinks() {
     symlink "${dotfiles_dir}/bash_custom" "${home_dir}/.bash_custom"
-    symlink "${dotfiles_dir}/bash_linux" "${home_dir}/.bash_linux"
-    symlink "${dotfiles_dir}/bash_mac" "${home_dir}/.bash_mac"
     symlink "${dotfiles_dir}/docker_config.json" "${home_dir}/.docker/config.json"
     symlink "${dotfiles_dir}/gitconfig" "${home_dir}/.gitconfig"
     symlink "${dotfiles_dir}/gitignore_global" "${home_dir}/.gitignore_global"
@@ -69,12 +67,11 @@ setup_symlinks() {
     symlink "${dotfiles_dir}/mise.toml" "${config_dir}/mise/config.toml"
 
     # Add sourcing of ~/.bash_custom to .bashrc and .profile if not present
-    if ! grep -Fxq 'source ~/.bash_custom' "${home_dir}/.bashrc"; then
-        echo 'source ~/.bash_custom' >> "${home_dir}/.bashrc"
-    fi
-    if ! grep -Fxq 'source ~/.bash_custom' "${home_dir}/.profile"; then
-        echo 'source ~/.bash_custom' >> "${home_dir}/.profile"
-    fi
+    for file in "${home_dir}/.bashrc" "${home_dir}/.profile"; do
+        if ! grep -Fxq 'source ~/.bash_custom' "$file"; then
+            echo 'source ~/.bash_custom' >> "$file"
+        fi
+    done
 }
 
 setup_system() {

@@ -1,18 +1,12 @@
 #!/bin/bash
 
-
-# Allow __git_ps1 to work on arch linux
-[[ -f /usr/share/git/git-prompt.sh ]] && . /usr/share/git/git-prompt.sh
-
-GIT_PS1_SHOWDIRTYSTATE=1
-GIT_PS1_SHOWSTASHSTATE=1
-GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWSTASHSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
 
 get_ps1() {
     local blue="\[\033[0;34m\]"
     local white="\[\033[0;00m\]"
-    local magenta="\[\033[0;35m\]"
-    local pink="\[\033[0;31m\]"
     local green="\[\033[0;32m\]"
 
     local user="${blue}\u${white}"
@@ -27,8 +21,6 @@ get_ps1() {
 
 PS1="$(get_ps1)"
 
-export GOPATH=$HOME/go
-
 # Increase the amount of history bash will store and reload
 export HISTFILE=~/.history
 export HISTSIZE=
@@ -41,20 +33,59 @@ export HISTCONTROL=ignoreboth:erasedups
 
 export EDITOR=vim
 
+export PYTHONDONTWRITEBYTECODE=1
+
 # ipython needs these two
 export PAGER=less
 export less=-r
 
-# Platform dependant stuff
-if [[ "$(uname)" == 'Linux' ]]; then
-    . ~/.bash_linux
-elif [[ "$(uname)" == 'Darwin' ]]; then
-    . ~/.bash_mac
+# Mac-specific settings
+if [[ "$(uname)" == "Darwin" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    if [ -f /opt/homebrew/etc/bash_completion ]; then
+        . /opt/homebrew/etc/bash_completion
+    fi
+fi
+
+# Linux-specific settings
+if [[ "$(uname)" == "Linux" ]]; then
+    # Git prompt script for Linux (only load if available)
+    if [[ -f /usr/share/git/git-prompt.sh ]]; then
+        . /usr/share/git/git-prompt.sh
+    fi
+
+    # SSH Agent setup
+    setup_ssh_agent() {
+        [[ ! -d ~/.ssh ]] && return
+        export XDG_RUNTIME_DIR="/run/user/$UID"
+        export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+        SSH_ENV="$HOME/.ssh/environment"
+
+        start_agent() {
+            echo "Initializing new SSH agent..."
+            /usr/bin/ssh-agent | sed 's/^echo/#echo/' >"${SSH_ENV}"
+            echo succeeded
+            chmod 600 "${SSH_ENV}"
+            . "${SSH_ENV}" >/dev/null
+            /usr/bin/ssh-add
+        }
+
+        if [ -f "${SSH_ENV}" ]; then
+            . "${SSH_ENV}" >/dev/null
+            ps -ef | grep "${SSH_AGENT_PID}" | grep ssh-agent$ >/dev/null || {
+                start_agent
+            }
+        else
+            start_agent
+        fi
+    }
+
+    setup_ssh_agent
 fi
 
 export PATH="$HOME/bin:$HOME/go/bin:$PATH"
-
-export PYTHONDONTWRITEBYTECODE=1
 
 eval "$(${HOME}/.local/bin/mise activate bash)"
 source <(mise completion bash)
