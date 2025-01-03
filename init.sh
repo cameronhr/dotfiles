@@ -17,6 +17,17 @@ symlink() {
     local source="${1}"
     local target="${2}"
 
+    # Remove any existing symlink at the target
+    # Prevents creating a symlink loop
+    if [[ -L "${target}" ]]; then
+        rm "${target}"
+    fi
+
+    echo "Creating symlink from: ${source} to: ${target}"
+    if [[ -e "${target}" ]]; then
+        echo "Target ${target} exists and points to $(readlink "${target}" || echo "non-symlink")."
+    fi
+
     # Make sure the parent folder exists before creating the symlink
     mkdir -pv "$(dirname "${target}")"
 
