@@ -63,6 +63,7 @@ setup_symlinks() {
     symlink "${dotfiles_dir}/vim" "${home_dir}/.vim"
     symlink "${dotfiles_dir}/nvim" "${config_dir}/nvim"
     symlink "${dotfiles_dir}/mise.toml" "${config_dir}/mise/config.toml"
+    symlink "${dotfiles_dir}/wezterm/wezterm.lua" "${home_dir}/.wezterm.lua"
 
     # Add sourcing of ~/.bash_custom to .bashrc and .profile if not present
     for file in "${home_dir}/.bashrc" "${home_dir}/.profile"; do
@@ -95,7 +96,8 @@ setup_system() {
             tmux
         brew install --cask -f \
             docker \
-            rectangle
+            rectangle \
+            wezterm
 
         if [[ $(uname -m) == "arm64" ]]; then
             brew_bash="/opt/homebrew/bin/bash"
