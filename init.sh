@@ -57,13 +57,11 @@ setup_dotfiles() {
 
 setup_symlinks() {
     symlink "${dotfiles_dir}/bash_custom" "${home_dir}/.bash_custom"
-    symlink "${dotfiles_dir}/docker_config.json" "${home_dir}/.docker/config.json"
     symlink "${dotfiles_dir}/gitconfig" "${home_dir}/.gitconfig"
     symlink "${dotfiles_dir}/gitignore_global" "${home_dir}/.gitignore_global"
     symlink "${dotfiles_dir}/tmux.conf" "${home_dir}/.tmux.conf"
     symlink "${dotfiles_dir}/vim" "${home_dir}/.vim"
     symlink "${dotfiles_dir}/nvim" "${config_dir}/nvim"
-    symlink "${dotfiles_dir}/xmodmap" "${home_dir}/.xmodmap"
     symlink "${dotfiles_dir}/mise.toml" "${config_dir}/mise/config.toml"
 
     # Add sourcing of ~/.bash_custom to .bashrc and .profile if not present
@@ -150,6 +148,7 @@ setup_mise() {
     if [[ -f "${config_dir}/mise/config.toml" ]]; then
         mise exec python -- python3 -m pip install \
             ipython \
+            pynvim \
             requests
     fi
 }
