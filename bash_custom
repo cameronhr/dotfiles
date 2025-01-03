@@ -23,8 +23,8 @@ PS1="$(get_ps1)"
 
 # Increase the amount of history bash will store and reload
 export HISTFILE=~/.history
-export HISTSIZE=
-export HISTFILESIZE=
+export HISTSIZE=-1
+export HISTFILESIZE=-1
 # Allows for sharing of history across tmux session
 # "-a" immediately appends new history to the histfile
 export PROMPT_COMMAND='history -a'
