@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 config = wezterm.config_builder()
 
-config.color_scheme = "Catppuccin Latte"
+-- config.color_scheme = "Tokyo Night Storm"
 config.hide_tab_bar_if_only_one_tab = true
 config.quit_when_all_windows_are_closed = false
 config.audible_bell = "Disabled"
@@ -50,9 +50,9 @@ end)
 
 function scheme_for_appearance(appearance)
     if appearance:find("Dark") then
-        return "Catppuccin Mocha"
+        return "Tokyo Night Storm"
     else
-        return "Catppuccin Latte"
+        return "Tokyo Night Day"
     end
 end
 
