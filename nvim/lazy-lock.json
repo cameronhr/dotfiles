@@ -1,0 +1,7 @@
+{
+  "auto-dark-mode.nvim": { "branch": "master", "commit": "4531f8b2b09ed8f0b8875a706419f9cecda1d969" },
+  "lazy.nvim": { "branch": "main", "commit": "077102c5bfc578693f12377846d427f49bc50076" },
+  "plenary.nvim": { "branch": "master", "commit": "2d9b06177a975543726ce5c73fca176cedbffe9d" },
+  "telescope.nvim": { "branch": "master", "commit": "2eca9ba22002184ac05eddbe47a7fe2d5a384dfc" },
+  "tokyonight.nvim": { "branch": "main", "commit": "45d22cf0e1b93476d3b6d362d720412b3d34465c" }
+}
