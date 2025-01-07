@@ -31,7 +31,7 @@ export PROMPT_COMMAND='history -a'
 # Ignore and erase duplicates and commands with leading whitespace
 export HISTCONTROL=ignoreboth:erasedups
 
-export EDITOR=vim
+export EDITOR=nvim
 
 export PYTHONDONTWRITEBYTECODE=1
 
