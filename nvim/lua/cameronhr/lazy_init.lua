@@ -67,7 +67,7 @@ require("lazy").setup({
         lazy = false,
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = { "python", "lua", "bash", "javascript" },
+                ensure_installed = { "python", "lua", "bash", "javascript", "sql" },
                 highlight = {
                     enable = true,
                     additional_vim_regex_highlighting = { "markdown" },
@@ -79,6 +79,14 @@ require("lazy").setup({
                 auto_install = true,
             })
         end,
+    },
+    {
+        'tpope/vim-dadbod',
+        dependencies = {
+            'kristijanhusak/vim-dadbod-completion',
+            'kristijanhusak/vim-dadbod-ui',
+            'hrsh7th/nvim-cmp',
+        },
     },
     {
         "hrsh7th/nvim-cmp",
@@ -106,6 +114,7 @@ require("lazy").setup({
                     { name = "treesitter" },
                     { name = "buffer" },
                     { name = "path" },
+                    { name = "vim-dadbod-completion" },
                 },
             })
         end,
