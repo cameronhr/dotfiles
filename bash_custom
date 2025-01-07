@@ -85,6 +85,8 @@ if [[ "$(uname)" == "Linux" ]]; then
     setup_ssh_agent
 fi
 
+[[ -f ~/.aliases ]] && . ~/.aliases
+
 export PATH="$HOME/bin:$HOME/go/bin:$PATH"
 
 eval "$(${HOME}/.local/bin/mise activate bash)"

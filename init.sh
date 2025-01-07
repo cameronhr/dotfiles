@@ -67,6 +67,7 @@ setup_dotfiles() {
 }
 
 setup_symlinks() {
+    symlink "${dotfiles_dir}/aliases" "${home_dir}/.aliases"
     symlink "${dotfiles_dir}/bash_custom" "${home_dir}/.bash_custom"
     symlink "${dotfiles_dir}/gitconfig" "${home_dir}/.gitconfig"
     symlink "${dotfiles_dir}/gitignore_global" "${home_dir}/.gitignore_global"
