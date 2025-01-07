@@ -94,7 +94,6 @@ setup_system() {
             echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "${home_dir}/.profile"
             eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
-
         echo "Installing packages with brew"
         brew install \
             bash \
@@ -102,10 +101,12 @@ setup_system() {
             git \
             mise \
             mosh \
+            pgcli \
             python3 \
             ripgrep \
             shellcheck \
             tmux
+
         brew install --cask -f \
             docker \
             rectangle \
@@ -119,27 +120,36 @@ setup_system() {
         echo "Adding ${brew_bash} to /etc/shells if not present"
         grep "${brew_bash}" /etc/shells &>/dev/null || echo "${brew_bash}" | sudo tee -a /etc/shells
         [[ ${SHELL} = ${brew_bash} ]] || chsh -s "${brew_bash}" "$(whoami | xargs echo -n)"
-
-        # Add ssh agent to system keychain on first unlock
+        
         ssh_agent_config="AddKeysToAgent yes"
         grep "${ssh_agent_config}" "${ssh_dir}/config" &>/dev/null || echo "${ssh_agent_config}" >> "${ssh_dir}/config"
-
     else
         # Currently only working for Debian and Ubuntu based distros
         if grep -qE "Ubuntu|Debian|Raspbian" /etc/issue; then
             echo "Installing required packages"
-            sudo -E apt-get update
+            
+            # Add wezterm repo and install
+            curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/wezterm-archive-keyring.gpg
+            echo "deb [signed-by=/usr/share/keyrings/wezterm-archive-keyring.gpg] https://apt.fury.io/wez/ * *" | sudo tee /etc/apt/sources.list.d/wezterm.list
+            sudo apt-get update
+
             sudo -E apt-get install -yq \
                 bash-completion \
                 curl \
                 git \
+                mosh \
+                pgcli \
                 python3 \
                 python3-pip \
-                python3-venv \
                 ripgrep \
                 shellcheck \
                 tmux \
-                vim-nox
+                wezterm
+
+            # Install mise using their official install script
+            if ! which mise &> /dev/null; then
+                curl https://mise.run | sh
+            fi
         fi
     fi
 }
