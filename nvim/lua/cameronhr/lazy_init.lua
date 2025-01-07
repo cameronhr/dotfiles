@@ -1,5 +1,4 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
         "git",
@@ -70,19 +69,26 @@ require("lazy").setup({
             require("nvim-treesitter.configs").setup({
                 ensure_installed = { "python", "lua", "bash", "javascript" },
                 highlight = {
-		    enable = true,
-		    additional_vim_regex_highlighting = { "markdown" },
-		},
+                    enable = true,
+                    additional_vim_regex_highlighting = { "markdown" },
+                },
                 indent = { enable = true },
+                -- Install parsers synchronously (only applied to `ensure_installed`)
+                sync_install = false,
+                -- Automatically install missing parsers when entering buffer
+                auto_install = true,
             })
         end,
     },
     {
         "hrsh7th/nvim-cmp",
         dependencies = {
-            "ray-x/cmp-treesitter", -- Completion for symbols from Treesitter
-            "hrsh7th/cmp-buffer", -- For buffer-local completion
-            "hrsh7th/cmp-path" -- For file path completion
+            "ray-x/cmp-treesitter",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-nvim-lsp",
+            "L3MON4D3/LuaSnip",
+            "saadparwaiz1/cmp_luasnip",
         },
         lazy = false,
         config = function()
@@ -104,7 +110,49 @@ require("lazy").setup({
             })
         end,
     },
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "hrsh7th/cmp-nvim-lsp",
+        },
+        config = function()
+            require("mason").setup()
+            require("mason-lspconfig").setup({
+                ensure_installed = { "jedi_language_server", "ruff" },
+                automatic_installation = true,
+            })
+
+            local lspconfig = require("lspconfig")
+            lspconfig.jedi_language_server.setup({})
+            lspconfig.ruff.setup({
+                init_options = {
+                    settings = {
+                        lint = {
+                            ignore = {"I", "E402"}
+                        }
+                    }
+                }
+            })
+        end
+    },
+    {
+        "nvimtools/none-ls.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            local null_ls = require("null-ls")
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.isort.with({
+                        extra_args = {"--profile", "black", "--multi-line", "3"}
+                    }),
+                    null_ls.builtins.formatting.black,
+                }
+            })
+        end
+    },
 }, {
-    -- Lazy.nvim configuration options
+    -- Lazy.vim configuration options
     change_detection = { notify = false },
 })
