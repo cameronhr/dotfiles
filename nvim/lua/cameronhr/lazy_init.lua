@@ -62,6 +62,48 @@ require("lazy").setup({
             })
         end,
     },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        lazy = false,
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = { "python", "lua", "bash", "javascript" },
+                highlight = {
+		    enable = true,
+		    additional_vim_regex_highlighting = { "markdown" },
+		},
+                indent = { enable = true },
+            })
+        end,
+    },
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            "ray-x/cmp-treesitter", -- Completion for symbols from Treesitter
+            "hrsh7th/cmp-buffer", -- For buffer-local completion
+            "hrsh7th/cmp-path" -- For file path completion
+        },
+        lazy = false,
+        config = function()
+            local cmp = require("cmp")
+            cmp.setup({
+                snippet = {
+                    expand = function(_) end,
+                },
+                mapping = {
+                    ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+                },
+                sources = {
+                    { name = "treesitter" },
+                    { name = "buffer" },
+                    { name = "path" },
+                },
+            })
+        end,
+    },
 }, {
     -- Lazy.nvim configuration options
     change_detection = { notify = false },
