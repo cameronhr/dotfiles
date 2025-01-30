@@ -21,7 +21,7 @@
 [core]
 	excludesfile = /Users/cameronhr/.gitignore_global
     attributesfile = ~/home/cameronhr/.gitattributes_global
-    editor = vim
+	editor = nvim
 
 [filter "lfs"]
     process = git-lfs filter-process
