@@ -26,3 +26,10 @@ vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = "Show hover documentation" 
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, { desc = "Format file" })
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = "Code actions" })
 
+-- Soft-wrap text
+vim.keymap.set("n", "<leader>w", function()
+    vim.wo.wrap = not vim.wo.wrap
+    vim.wo.linebreak = not vim.wo.linebreak
+    vim.bo.textwidth = 0
+end, { noremap = true, silent = true, desc = "Toggle soft-wrap" })
+
