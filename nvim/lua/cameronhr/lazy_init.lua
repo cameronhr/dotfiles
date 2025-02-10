@@ -21,7 +21,7 @@ require("lazy").setup({
             require("tokyonight").setup({
                 style = "storm",
                 light_style = "day",
-                transparent = false,
+                transparent = true,
                 terminal_colors = true,
             })
         end,
@@ -67,7 +67,7 @@ require("lazy").setup({
         lazy = false,
         config = function()
             require("nvim-treesitter.configs").setup({
-                ensure_installed = { "python", "lua", "bash", "javascript", "sql" },
+                ensure_installed = { "python", "lua", "bash", "javascript", "sql"},
                 highlight = {
                     enable = true,
                     additional_vim_regex_highlighting = { "markdown" },
@@ -153,14 +153,68 @@ require("lazy").setup({
             local null_ls = require("null-ls")
             null_ls.setup({
                 sources = {
+                    --Python
                     null_ls.builtins.formatting.isort.with({
                         extra_args = {"--profile", "black", "--multi-line", "3"}
                     }),
                     null_ls.builtins.formatting.black,
+                    -- YAML
+                    null_ls.builtins.diagnostics.yamllint,
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = { "yaml" },
+                    }),
+                    -- JSON
+                    null_ls.builtins.diagnostics.jsonlint,
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = { "json" },
+                    }),
                 }
             })
         end
     },
+    {
+      "yetone/avante.nvim",
+      event = "VeryLazy",
+      lazy = false,
+      version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
+      opts = {
+        provider = "claude",
+        openai = {
+          endpoint = "https://api.anthropic.com",
+          model = "claude-3-5-sonnet-20241022",
+        },
+      },
+      build = "make",
+      dependencies = {
+        "stevearc/dressing.nvim",
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+        "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+        "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+        {
+          -- support for image pasting
+          "HakonHarnes/img-clip.nvim",
+          event = "VeryLazy",
+          opts = {
+            default = {
+              embed_image_as_base64 = false,
+              prompt_for_file_name = false,
+              drag_and_drop = {
+                insert_mode = true,
+              },
+            },
+          },
+        },
+        {
+          -- Make sure to set this up properly if you have lazy=true
+          'MeanderingProgrammer/render-markdown.nvim',
+          opts = {
+            file_types = { "markdown", "Avante" },
+          },
+          ft = { "markdown", "Avante" },
+        },
+      },
+    }
 }, {
     -- Lazy.vim configuration options
     change_detection = { notify = false },
