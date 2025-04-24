@@ -1,0 +1,32 @@
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--     pattern = "*.py",
+--     callback = function()
+--         local function find_pyproject()
+--             local cwd = vim.fn.getcwd()
+--             local handle = io.popen("find " .. cwd .. " -maxdepth 3 -name 'pyproject.toml' | head -n 1")
+--             local result = handle:read("*a")
+--             handle:close()
+--             return result:gsub("\n", "")
+--         end
+--
+--         local pyproject_path = find_pyproject()
+--         local ruff_cmd = "ruff format " .. vim.fn.expand("%")
+--
+--         if pyproject_path ~= "" then
+--             ruff_cmd = "ruff format --config=" .. pyproject_path .. " " .. vim.fn.expand("%")
+--         end
+--
+--         local ruff_config = os.getenv("RUFF_CONFIG")
+--         if ruff_config and ruff_config ~= "" then
+--             ruff_cmd = "ruff format --config=" .. ruff_config .. " " .. vim.fn.expand("%")
+--         end
+--
+--         -- Run Ruff asynchronously to prevent blocking
+--         vim.fn.jobstart(ruff_cmd, {
+--             on_exit = function()
+--                 -- Reload the file after formatting
+--                 vim.cmd("checktime")
+--             end,
+--         })
+--     end,
+-- })

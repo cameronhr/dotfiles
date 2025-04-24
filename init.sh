@@ -105,6 +105,7 @@ setup_system() {
             python3 \
             ripgrep \
             shellcheck \
+            stylua \
             tmux
 
         brew install --cask -f \

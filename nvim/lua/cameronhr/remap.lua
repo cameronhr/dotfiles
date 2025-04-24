@@ -28,13 +28,7 @@ vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action
 
 -- Soft-wrap text
 vim.keymap.set("n", "<leader>w", function()
-    vim.wo.wrap = not vim.wo.wrap
-    vim.wo.linebreak = not vim.wo.linebreak
-    vim.bo.textwidth = 0
+	vim.wo.wrap = not vim.wo.wrap
+	vim.wo.linebreak = not vim.wo.linebreak
+	vim.bo.textwidth = 0
 end, { noremap = true, silent = true, desc = "Toggle soft-wrap" })
-
--- Avy/Avante mappings
-vim.keymap.set("n", "<leader>aa", ":AvanteToggle<CR>",  { noremap = true, silent = true, desc = "Toggle Avante sidebar" })
-vim.keymap.set("n", "<leader>ar", ":AvanteRefresh<CR>", { noremap = true, silent = true, desc = "Refresh Avante sidebar" })
-vim.keymap.set("n", "<leader>af", ":AvanteFocus<CR>", { noremap = true, silent = true, desc = "Switch Avante focus" })
-vim.keymap.set("n", "<leader>ae", ":AvanteEdit<CR>", { noremap = true, silent = true, desc = "Edit selected blocks" })
