@@ -99,7 +99,6 @@ setup_system() {
             bash \
             bash-completion \
             git \
-            mise \
             mosh \
             pgcli \
             python3 \
@@ -185,9 +184,9 @@ init() {
     mkdir -p "${ssh_dir}"
     curl -L https://github.com/cameronhr.keys >> "${ssh_dir}/authorized_keys"
 
+    setup_dotfiles
     setup_system
     setup_symlinks
-    setup_dotfiles
     setup_mise
 
     echo "Setup complete. Please run 'source ~/.bashrc' to apply changes."
