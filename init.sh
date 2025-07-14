@@ -102,6 +102,7 @@ setup_system() {
             mosh \
             pgcli \
             python3 \
+            raycast \
             ripgrep \
             shellcheck \
             stylua \
@@ -109,7 +110,6 @@ setup_system() {
 
         brew install --cask -f \
             docker \
-            rectangle \
             wezterm
 
         if [[ $(uname -m) == "arm64" ]]; then

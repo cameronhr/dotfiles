@@ -1,8 +1,10 @@
 [settings]
 experimental = true
+idiomatic_version_file_enable_tools = ["python"]
 
 [tools]
 python = "3.12"
 node = "22.12.0"
 neovim = "latest"
 usage = "latest"
+uv = "latest"
