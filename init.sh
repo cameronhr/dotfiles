@@ -98,6 +98,8 @@ setup_system() {
         brew install \
             bash \
             bash-completion \
+            colima \
+            docker \
             git \
             mosh \
             pgcli \
@@ -109,7 +111,6 @@ setup_system() {
             tmux
 
         brew install --cask -f \
-            docker \
             wezterm
 
         if [[ $(uname -m) == "arm64" ]]; then

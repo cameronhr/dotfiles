@@ -137,7 +137,7 @@ require("lazy").setup({
 			require("mason").setup()
 			require("mason-lspconfig").setup({
 				ensure_installed = {
-					"pyright",
+					"basedpyright",
 					"ruff",
 					"yamlls",
 				},
@@ -146,7 +146,7 @@ require("lazy").setup({
 
 			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			lspconfig.pyright.setup({
+			lspconfig.basedpyright.setup({
 				capabilities = capabilities,
 			})
 			lspconfig.ruff.setup({
@@ -157,6 +157,21 @@ require("lazy").setup({
 							ignore = { "I", "E402" },
 						},
 					},
+				},
+			})
+
+			vim.diagnostic.config({
+				virtual_text = true,
+				signs = true,
+				underline = true,
+				float = {
+					border = "rounded",
+					source = "always",
+					header = "",
+					prefix = "",
+					focusable = false,
+					max_width = 80,
+					wrap = true,
 				},
 			})
 
