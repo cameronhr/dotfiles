@@ -162,8 +162,6 @@ setup_mise() {
     eval "$("${local_bin_dir}/mise" activate bash)"
     mise trust "${config_dir}/mise/config.toml" || echo "No global mise config, not trusting"
 
-    mise use -g node@22.12.0 || mise use -g node@latest
-
     mise plugin add usage
     mise use -g python@3.12
 
