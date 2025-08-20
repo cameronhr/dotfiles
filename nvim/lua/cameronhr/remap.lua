@@ -4,6 +4,30 @@ local harpoon = require("harpoon")
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
+-- Diagnostic navigation with virtual lines: https://www.reddit.com/r/neovim/comments/1jm5atz/comment/mk9w6v0
+---@param jumpCount number
+local function jumpWithVirtLineDiags(jumpCount)
+	pcall(vim.api.nvim_del_augroup_by_name, "jumpWithVirtLineDiags") -- prevent autocmd for repeated jumps
+
+	vim.diagnostic.jump({ count = jumpCount })
+
+	vim.diagnostic.config({
+		virtual_text = false,
+		virtual_lines = { current_line = true },
+	})
+
+	vim.defer_fn(function() -- deferred to not trigger by jump itself
+		vim.api.nvim_create_autocmd("CursorMoved", {
+			desc = "User(once): Reset diagnostics virtual lines",
+			once = true,
+			group = vim.api.nvim_create_augroup("jumpWithVirtLineDiags", {}),
+			callback = function()
+				vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
+			end,
+		})
+	end, 1)
+end
+
 -- Keep visual selection after indent/dedent
 vim.api.nvim_set_keymap("v", "<", "<gv", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", ">", ">gv", { noremap = true, silent = true })
@@ -27,6 +51,23 @@ vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover documentation" })
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "Format file" })
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
+vim.keymap.set("n", "ge", function()
+	jumpWithVirtLineDiags(1)
+end, { desc = "Next diagnostic" })
+vim.keymap.set("n", "gE", function()
+	jumpWithVirtLineDiags(-1)
+end, { desc = "Prev diagnostic" })
+vim.keymap.set("n", "<leader>k", function()
+	vim.diagnostic.config({ virtual_lines = { current_line = true }, virtual_text = false })
+
+	vim.api.nvim_create_autocmd("CursorMoved", {
+		group = vim.api.nvim_create_augroup("line-diagnostics", { clear = true }),
+		callback = function()
+			vim.diagnostic.config({ virtual_lines = false, virtual_text = true })
+			return true
+		end,
+	})
+end)
 
 -- Harpoon keymaps
 harpoon:setup()

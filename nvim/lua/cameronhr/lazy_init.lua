@@ -126,6 +126,14 @@ require("lazy").setup({
 		end,
 	},
 	{
+		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+		config = function()
+			require("lsp_lines").setup()
+			-- Disable by default, we'll toggle it
+			vim.diagnostic.config({ virtual_lines = false })
+		end,
+	},
+	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"williamboman/mason.nvim",
@@ -148,6 +156,15 @@ require("lazy").setup({
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			lspconfig.basedpyright.setup({
 				capabilities = capabilities,
+				settings = {
+					basedpyright = {
+						analysis = {
+							autoSearchPaths = true,
+							autoImportCompletions = true,
+							diagnosticMode = "workspace",
+						},
+					},
+				},
 			})
 			lspconfig.ruff.setup({
 				capabilities = capabilities,
@@ -162,6 +179,7 @@ require("lazy").setup({
 
 			vim.diagnostic.config({
 				virtual_text = true,
+				virtual_lines = false,
 				signs = true,
 				underline = true,
 				float = {
