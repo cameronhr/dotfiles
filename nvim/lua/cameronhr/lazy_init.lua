@@ -236,4 +236,5 @@ require("lazy").setup({
 }, {
 	-- Lazy.vim configuration options
 	change_detection = { notify = false },
+	rocks = { enabled = false }, -- Disabling to get rid of warning
 })

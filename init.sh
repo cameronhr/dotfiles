@@ -100,6 +100,7 @@ setup_system() {
             bash-completion \
             colima \
             docker \
+            fd \
             git \
             mosh \
             pgcli \
@@ -167,13 +168,8 @@ setup_mise() {
 
     mise install -y neovim
     mise use -g neovim
+    mise use -g prettier
 
-    if [[ -f "${config_dir}/mise/config.toml" ]]; then
-        mise exec python -- python3 -m pip install \
-            ipython \
-            pynvim \
-            requests
-    fi
 }
 
 init() {
