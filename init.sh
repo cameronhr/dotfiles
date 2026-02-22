@@ -204,7 +204,7 @@ init() {
 # When piping in from stdin (eg curl), BASH_SOURCE[0] will be unset, and
 # when executing via ./init.sh or bash init.sh, BASH_SOURCE[0] and ${0}
 # will be equal
-if [ "${BASH_SOURCE[0]}" == "${0}" ] || [ -z "${BASH_SOURCE[0]}" ]; then
+if [ -z "${BASH_SOURCE[0]:-}" ] || [ "${BASH_SOURCE[0]}" == "${0}" ]; then
   # Tell bash to fail immediately on any error as well as unset variables
   set -eu -o pipefail
   init "$@"
